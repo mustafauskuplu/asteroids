@@ -4,36 +4,34 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ASTEROID_KINDS, ASTEROID_MAX_
 
 def main():
     pygame.init()
-    
-    print("Starting Asteroids!")
-    print(f"Screen width: {SCREEN_WIDTH}")
-    print(f"Screen height: {SCREEN_HEIGHT}")
-    
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
     clock = pygame.time.Clock()
-    dt = 0
+
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    Player.containers = (updatable, drawable)
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
-    updatable = pygame.sprite.Group(player)
-    drawable = pygame.sprite.Group(player)
-
-    Player.containers = (updatable, drawable)
+    dt = 0
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        
-        screen.fill("black")
-        dt = clock.tick(60) / 1000
 
         updatable.update(dt)
-        for item in drawable:
-            item.draw(screen)
+        
+        screen.fill("black")
+        
+        for obj in drawable:
+            obj.draw(screen)
 
         pygame.display.flip()
+
+        # limit the framerate to 60 FPS
+        dt = clock.tick(60) / 1000
 
 if __name__ == "__main__":
     main()
